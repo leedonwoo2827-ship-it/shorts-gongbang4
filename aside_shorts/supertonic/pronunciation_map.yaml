@@ -1,0 +1,184 @@
+rules:
+  10세기: 십 세기
+  11세기: 십일 세기
+  12세기: 십이 세기
+  17세기: 십칠 세기
+  1EdTech: 원에드테크
+  7세기: 칠 세기
+  ADSL: 에이디에스엘
+  AI: 에이아이
+  ALEKS: 알렉스
+  API: 에이피아이
+  AR: 에이알
+  BBC: 비비씨
+  BERT: 버트
+  BGM: 비지엠
+  CCK08: 씨씨케이공팔
+  CCTV: 씨씨티브이
+  CERN: 세른
+  CNN: 씨엔엔
+  CPU: 씨피유
+  ChatGPT: 챗지피티
+  Claude Code: 클로드 코드
+  DIKSHA: 딕샤
+  EBS: 이비에스
+  GPA: 지피에이
+  GPS: 지피에스
+  GPU: 지피유
+  H5P: 에이치 파이브 피
+  HTML5: 에이치티엠엘-파이브
+  HTTP: 에이치티티피
+  HTTPS: 에이치티티피에스
+  IBM: 아이비엠
+  ICS: 아이씨에스
+  IDE: 아이디이
+  IELTS: 아이엘츠
+  JSON: 제이슨
+  KBS: 케이비에스
+  KERIS: 케리스
+  Khanmigo: 칸미고
+  LMS: 엘엠에스
+  MBC: 엠비씨
+  MC: 엠씨
+  MIT: 엠아이티
+  MOOC: 무크
+  MV: 엠브이
+  NASA: 나사
+  NHK: 엔에이치케이
+  NeurIPS: 뉴립스
+  OECD: 오이씨디
+  OST: 오에스티
+  OpenAI: 오픈에이아이
+  PDF: 피디에프
+  PLATO: 플레이토
+  RSS: 알에스에스
+  SBS: 에스비에스
+  SCORM: 스콤
+  SDK: 에스디케이
+  TED: 테드
+  TOEFL: 토플
+  TOEIC: 토익
+  UNESCO: 유네스코
+  UNICEF: 유니세프
+  URL: 유알엘
+  USB: 유에스비
+  VR: 브이알
+  W3C: 더블류쓰리씨
+  WHA: 더블유에이치에이
+  WHATWG: 왓 더블유지
+  WHO: 더블유에이치오
+  XML: 엑스엠엘
+  YTN: 와이티엔
+  cMOOC: 씨무크
+  xAPI: 엑스에이피아이
+  xMOOC: 엑스무크
+  # ── SQLD (쇼츠공방4) — 영어 단어는 소리대로, 약어는 글자대로. 사전에 없는 대문자 약어는 글자 하나씩 읽히니 여기 넣는다
+  SQLD: 에스큐엘디
+  SQL: 에스큐엘
+  DBMS: 디비엠에스
+  RDBMS: 알디비엠에스
+  DDL: 디디엘
+  DML: 디엠엘
+  DCL: 디씨엘
+  TCL: 티씨엘
+  ERD: 이알디
+  PK: 피케이
+  FK: 에프케이
+  SELECT: 셀렉트
+  FROM: 프롬
+  WHERE: 웨어
+  GROUP BY: 그룹 바이
+  ORDER BY: 오더 바이
+  PARTITION BY: 파티션 바이
+  HAVING: 해빙
+  DISTINCT: 디스팅트
+  INSERT: 인서트
+  UPDATE: 업데이트
+  DELETE: 딜리트
+  MERGE: 머지
+  CREATE: 크리에이트
+  ALTER: 얼터
+  DROP: 드롭
+  TRUNCATE: 트렁케이트
+  RENAME: 리네임
+  GRANT: 그랜트
+  REVOKE: 리보크
+  COMMIT: 커밋
+  ROLLBACK: 롤백
+  SAVEPOINT: 세이브포인트
+  "NULL": 널
+  NVL2: 엔브이엘투
+  NVL: 엔브이엘
+  NULLIF: 널이프
+  COALESCE: 코얼레스
+  DECODE: 디코드
+  CASE: 케이스
+  WHEN: 웬
+  THEN: 덴
+  ELSE: 엘스
+  COUNT: 카운트
+  SUM: 섬
+  AVG: 에이브이지
+  MAX: 맥스
+  MIN: 민
+  JOIN: 조인
+  INNER JOIN: 이너 조인
+  OUTER JOIN: 아우터 조인
+  LEFT: 레프트
+  RIGHT: 라이트
+  FULL: 풀
+  CROSS: 크로스
+  NATURAL: 내추럴
+  USING: 유징
+  UNION ALL: 유니온 올
+  UNION: 유니온
+  INTERSECT: 인터섹트
+  EXCEPT: 익셉트
+  MINUS: 마이너스
+  ROLLUP: 롤업
+  CUBE: 큐브
+  GROUPING SETS: 그루핑 세츠
+  GROUPING: 그루핑
+  EXISTS: 이그지스츠
+  IN: 인
+  ANY: 애니
+  ALL: 올
+  VIEW: 뷰
+  INDEX: 인덱스
+  ROWNUM: 로우넘
+  ROW_NUMBER: 로우 넘버
+  RANK: 랭크
+  DENSE_RANK: 덴스 랭크
+  OVER: 오버
+  LAG: 래그
+  LEAD: 리드
+  CONNECT BY: 커넥트 바이
+  START WITH: 스타트 위드
+  PRIOR: 프라이어
+  LIKE: 라이크
+  BETWEEN: 비트윈
+  AND: 앤드
+  OR: 오어
+  NOT: 낫
+  IS: 이즈
+  AS: 애즈
+  ASC: 어센딩
+  DESC: 디센딩
+  TOP: 탑
+  CHAR: 캐릭터
+  VARCHAR2: 바캐릭터투
+  VARCHAR: 바캐릭터
+  NUMBER: 넘버
+  DATE: 데이트
+  CHECK: 체크
+  UNIQUE: 유니크
+  PRIMARY KEY: 프라이머리 키
+  FOREIGN KEY: 포린 키
+  DEFAULT: 디폴트
+  CASCADE: 캐스케이드
+  TABLE: 테이블
+  ROLE: 롤
+  PROCEDURE: 프로시저
+  TRIGGER: 트리거
+  OLTP: 오엘티피
+  OLAP: 오랩
