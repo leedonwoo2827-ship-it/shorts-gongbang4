@@ -241,10 +241,13 @@ def _unit_row(job: Job, u, out) -> Dict[str, Any]:
     if u.is_html:       # SQLD 용어 모드 — 장 하나 = 용어 여러 개 = 쇼츠 여러 편
         from ..terms import load as load_terms
         have = {o["id"] for o in out}
-        tl = [{"sid": t["sid"], "name": t["name"], "script": t["sid"] in have}
-              for t in load_terms(u).get("terms") or []]
+        data = load_terms(u)
+        tl = [{"sid": t["sid"], "name": t["name"], "script": t["sid"] in have, "skip": bool(t.get("skip")),
+               "src": (t.get("sources") or [""])[0], "chart": bool((t.get("mermaid") or "").strip())}
+              for t in data.get("terms") or []]
         return {"prefix": u.prefix, "chapter": u.chapter, "section": u.section, "dir": u.name, "html": True,
                 "raw": u.raw.name, "rewrite": "", "terms": tl, "chars": 0, "check": None, "file": u.raw.name,
+                "src_titles": data.get("source_titles") or {}, "dropped": data.get("dropped") or [],
                 "shorts": sum(1 for o in out if o["id"].startswith(u.prefix + "-"))}
     return {"prefix": u.prefix, "chapter": u.chapter, "section": u.section, "dir": u.name,
             "raw": u.raw.name if u.raw else "", "rewrite": u.rewrite.name if u.rewrite else "",
@@ -253,6 +256,30 @@ def _unit_row(job: Job, u, out) -> Dict[str, Any]:
                       "sim": rep.get("example_sim_max"), "swaps": rep.get("swaps") or []} if rep else None,
             # 이전 버전이 만든 개작본(검증.json 없음)인지, 가져온 개작본인지
             "file": (u.rewrite or u.raw).name if (u.rewrite or u.raw) else ""}
+
+
+class TermSkip(BaseModel):
+    sid: str
+    skip: bool
+
+
+@app.post("/api/jobs/{name}/terms/{prefix}/skip")
+def term_skip(name: str, prefix: str, body: TermSkip) -> Dict[str, Any]:
+    """용어 「제외」/「되살리기」 — terms.json 의 skip 칸만 바꾼다(번호는 그대로). 제외한 용어는 대본·영상을 만들지 않는다."""
+    u = _job(name).unit(prefix)
+    if not u or not u.is_html:
+        raise HTTPException(404, "그 장이 없어요")
+    path = u.terms_dir / "terms.json"
+    data = config.read_json(path, {}) or {}
+    hit = next((t for t in data.get("terms") or [] if t["sid"] == body.sid), None)
+    if not hit:
+        raise HTTPException(404, "그 용어가 없어요")
+    if body.skip:
+        hit["skip"] = True
+    else:
+        hit.pop("skip", None)
+    config.write_json(path, data)
+    return {"ok": True, "sid": body.sid, "skip": body.skip}
 
 
 @app.get("/api/jobs/{name}/units/{prefix}/compare")

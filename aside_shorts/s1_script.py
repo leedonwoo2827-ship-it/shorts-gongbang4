@@ -153,7 +153,7 @@ def run_terms(job: Job, only=None, force: bool = False) -> None:
     model = config.load()["claude"]["script_model"]
     system = system_prompt(TERM_PROMPT).replace("{EXAM}", job.get("exam") or job.get("title") or "SQLD")
     for u in [u for u in job.units if u.is_html]:
-        tl = terms_mod.load(u).get("terms") or []
+        tl = [t for t in terms_mod.load(u).get("terms") or [] if not t.get("skip")]     # 대시보드에서 「제외」한 용어는 안 만든다
         if only:
             tl = [t for t in tl if any(t["sid"] == w or u.prefix == w or u.prefix.split("-")[0] == w for w in only)]
         if not tl:

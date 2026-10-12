@@ -76,6 +76,11 @@ summary{cursor:pointer;font-weight:700;color:var(--pri)}
 #log{flex:1;overflow:auto;white-space:pre-wrap;padding:0 14px 8px}
 #logbox button{background:#334155;border:1px solid #475569;color:#fff;border-radius:6px;padding:1px 9px;font-size:11.5px;cursor:pointer}
 #loginBar{position:fixed;right:20px;bottom:calc(var(--logh,170px) + 12px);z-index:30;background:#FFF7E0;border:1px solid #F2D27A;border-radius:12px;padding:10px 14px;box-shadow:0 6px 18px rgba(30,41,59,.18)}
+.tgrp{margin:2px 0 6px}.tgrp .th{font-size:11px;color:var(--sub);margin:2px 0}
+.tchip{display:inline-flex;align-items:center;gap:4px;margin:2px 6px 2px 0;padding:3px 4px 3px 8px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13px}
+.tchip.off{opacity:.45}.tchip.off .tn{text-decoration:line-through}.tchip input{margin:0}
+.tchip .tx{border:0;background:none;cursor:pointer;color:var(--sub);font-size:12px;padding:0 4px}.tchip .tx:hover{color:var(--bad)}
+.tg{font-size:10px;padding:0 5px;border-radius:6px;background:#e0ecf8;color:#1f4e79;font-weight:700}
 .empty{padding:28px 10px;text-align:center;color:var(--sub);border:1px dashed var(--line);border-radius:12px}
 .ytp{border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-top:8px;background:#fff}.ytp pre{white-space:pre-wrap;margin:6px 0 0;font:inherit;font-size:13px;line-height:1.5}
 code{background:#f1ede4;border-radius:4px;padding:1px 5px}
@@ -489,17 +494,39 @@ async function viewNew() {
   const chk = d => !d.rewrite ? `<span class="no">—</span>` : !d.check ? `<span class="mini">가져온 개작본</span>`
     : d.check.passed ? `<span class="ok">✓ 통과</span> <span class="mini">사례 유사도 ${d.check.sim ?? "-"}</span>`
     : `<span class="warn" title="${esc(d.check.problems.join("\n"))}">△ ${d.check.problems.length}건</span>`;
-  const termRow = d => `<tr><td><b>${esc(d.prefix)}</b></td><td>${esc(d.section)}<div class="mini">${esc(d.chapter)} · HTML 원고</div></td>
-      <td colspan="4">${d.terms.length ? d.terms.map(t => `<label class="opt" style="display:inline-flex;margin:2px 6px 2px 0" title="${esc(t.sid)}">
-        <input type="checkbox" data-term="${esc(t.sid)}" ${t.script ? "disabled" : ""}> ${t.script ? "<b>" + esc(t.name) + "</b> ✓" : esc(t.name)}</label>`).join("")
+  // ── 용어 모드(SQLD 등 HTML 원고): 장 → 원고 소주제(h3) → 용어. 용어 하나 = 쇼츠 한 편 ──
+  const chip = (d, t) => `<span class="tchip${t.skip ? " off" : ""}" title="${esc(t.sid)}${t.chart ? " · 개념 도식 있음" : ""}">
+      ${t.skip || t.script ? "" : `<input type="checkbox" data-term="${esc(t.sid)}">`}
+      <span class="tn">${esc(t.name)}</span>${t.chart ? '<span class="tg">도식</span>' : ""}${t.script ? '<span class="ok">✓</span>' : ""}
+      <button class="tx" data-skip="${esc(d.prefix)}|${esc(t.sid)}|${t.skip ? 0 : 1}" title="${t.skip ? "되살리기" : "이 용어는 쇼츠로 안 만들기"}">${t.skip ? "↺" : "✕"}</button></span>`;
+  const groups = d => { const g = []; d.terms.forEach(t => { const k = d.src_titles[t.src] || "기타";
+      const last = g[g.length - 1]; if (last && last.k === k) last.ts.push(t); else g.push({k, ts: [t]}); }); return g; };
+  const termRow = d => { const on = d.terms.filter(t => !t.skip).length;
+    return `<tr><td><b>${esc(d.prefix)}</b></td><td style="min-width:170px">${esc(d.section)}<div class="mini">${esc(d.chapter)}</div>
+      <div class="mini">${d.terms.length ? `용어 ${on}개${d.terms.length - on ? ` · 제외 ${d.terms.length - on}` : ""}` : ""}</div></td>
+      <td colspan="4">${d.terms.length ? groups(d).map(x => `<div class="tgrp"><div class="th">${esc(x.k)}</div>${x.ts.map(t => chip(d, t)).join("")}</div>`).join("")
+          + (d.dropped.length ? `<div class="mini" style="margin-top:4px">앞 장과 겹쳐 뺀 용어: ${esc(d.dropped.join(", "))}</div>` : "")
         : '<span class="warn">아직 — 「용어 뽑기」</span>'}</td><td class="num">${d.shorts}</td>
-      <td><div class="row" style="gap:4px"><button class="b s" data-terms="${esc(d.prefix)}" data-has="${d.terms.length ? 1 : 0}">${d.terms.length ? "용어 다시" : "용어 뽑기"}</button>
-        ${d.terms.length ? `<button class="b s p" data-tscript="${esc(d.prefix)}" title="체크한 용어만 대본(1)을 씀">선택 용어 대본</button>` : ""}</div></td></tr>`;
+      <td><div class="row" style="gap:4px;flex-direction:column;align-items:stretch">
+        <button class="b s" data-terms="${esc(d.prefix)}" data-has="${d.terms.length ? 1 : 0}">${d.terms.length ? "용어 다시" : "용어 뽑기"}</button>
+        ${d.terms.length ? `<button class="b s p" data-tscript="${esc(d.prefix)}" title="체크한 용어만 대본(1)을 씀">선택 용어 대본</button>` : ""}</div></td></tr>`; };
   if (r.docs.length && r.docs.every(d => d.html)) {
-    $("#docs").innerHTML = `<p class="mini">SQLD 용어 모드 — 장마다 「용어 뽑기」 → 용어 체크 → 「선택 용어 대본」 → 대시보드 진행표에서 「선택한 쇼츠 딸깍」. 굵은 ✓ = 대본 있음.</p>
-      <table><thead><tr><th>번호</th><th>장</th><th colspan="4">용어 (용어 하나 = 쇼츠 한 편)</th><th class="num">쇼츠</th><th></th></tr></thead><tbody>${r.docs.map(termRow).join("")}</tbody></table>`;
+    const all = r.docs.flatMap(d => d.terms), on = all.filter(t => !t.skip), done = r.docs.filter(d => d.terms.length).length;
+    $("#docs").innerHTML = `<div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div><b>장 ${r.docs.length}개</b> · 용어 뽑은 장 ${done}/${r.docs.length} · <b>쇼츠 예정 ${on.length}편</b>
+          <span class="mini">(전체 용어 ${all.length} · 제외 ${all.length - on.length} · 대본 있음 ${on.filter(t => t.script).length})</span></div>
+        <div class="row" style="gap:6px"><button class="b s" id="tAll">전체 용어 뽑기</button>
+          <button class="b s p" id="tScriptAll" title="제외하지 않은 용어 전부 대본(1). 영상은 「밤샘」이나 진행표에서">제외 안 한 용어 전부 대본</button></div></div>
+      <p class="mini">용어 하나 = 쇼츠 한 편. 원고 소주제(회색 제목)별로 묶었어요. <b>✕</b> = 쇼츠로 안 만들기(↺ 로 되살림) · <span class="tg">도식</span> = 개념 도식이 들어감 · <span class="ok">✓</span> = 대본 있음.
+        목록을 다 본 뒤 「제외 안 한 용어 전부 대본」→ 대본 확인 → 「밤샘 0→5」.</p>
+      <table class="terms"><thead><tr><th>번호</th><th>장</th><th colspan="4">용어</th><th class="num">쇼츠</th><th></th></tr></thead><tbody>${r.docs.map(termRow).join("")}</tbody></table>`;
+    $("#tAll").onclick = () => run(["s0-rewrite", "--job", S.job], "용어를 아직 안 뽑은 장의 용어를 뽑습니다(이미 뽑은 장은 그대로). 진행할까요?");
+    $("#tScriptAll").onclick = () => run(["s1-script", "--job", S.job], `제외하지 않은 용어 ${on.length - on.filter(t => t.script).length}개의 대본을 씁니다(이미 있는 건 건너뜀). 진행할까요?`);
+    document.querySelectorAll("[data-skip]").forEach(b => b.onclick = async () => {
+      const [prefix, sid, skip] = b.dataset.skip.split("|");
+      await api(`/api/jobs/${S.job}/terms/${prefix}/skip`, {method: "POST", body: {sid, skip: skip === "1"}}); viewNew(); });
     document.querySelectorAll("[data-terms]").forEach(b => b.onclick = () => run(["s0-rewrite", "--job", S.job, "--only", b.dataset.terms, ...(b.dataset.has === "1" ? ["--force"] : [])],
-      b.dataset.has === "1" ? `${b.dataset.terms} 장의 용어를 새로 뽑습니다(지금 목록은 바뀝니다). 진행할까요?` : null));
+      b.dataset.has === "1" ? `${b.dataset.terms} 장의 용어를 새로 뽑습니다(제외 표시는 유지, 번호는 바뀔 수 있어요). 진행할까요?` : null));
     document.querySelectorAll("[data-tscript]").forEach(b => b.onclick = () => {
       const ids = [...document.querySelectorAll(`[data-term^="${b.dataset.tscript}-"]:checked`)].map(x => x.dataset.term);
       if (!ids.length) return alert("대본을 쓸 용어를 체크해 주세요.");

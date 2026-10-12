@@ -120,15 +120,19 @@ def run(job: Job, only=None, force: bool = False, **_) -> None:
                     found.append({"name": name, "sources": [it["id"]], "mermaid": it.get("mermaid", ""),
                                   "diagram_type": it.get("diagram_type", "none")})
         terms, dup = [], []
+        skipped = {_squash(t["name"]) for t in cur.get("terms") or [] if t.get("skip")}     # 다시 뽑아도 「제외」는 유지
         for t in found:
             if _squash(t["name"]) in seen:
                 dup.append(f"{t['name']}→{seen[_squash(t['name'])]}")
                 continue
             t = {"n": len(terms) + 1, "sid": f"{u.prefix}-{len(terms) + 1:02d}", **t}
+            if _squash(t["name"]) in skipped:
+                t["skip"] = True
             terms.append(t)
             seen[_squash(t["name"])] = t["sid"]
         config.write_json(u.terms_dir / "terms.json", {"hash": u.hash, "chapter": u.section, "doc_title": doc["title"],
-                                                       "terms": terms})
+                                                       "terms": terms, "dropped": dup,
+                                                       "source_titles": {s["id"]: s["title"] for s in sources}})
         log(f"  ✓ 용어 {len(terms)}개: " + ", ".join(f"{t['sid'].rsplit('-', 1)[1]} {t['name']}" for t in terms))
         if dup:
             log(f"  · 앞 장과 겹쳐 뺀 용어: {', '.join(dup)}")

@@ -73,8 +73,12 @@ class Job:
         out = []
         for u in self.units:
             if u.script_dir.exists():
+                skip = set()
+                if u.is_html:       # 대시보드에서 「제외」한 용어는 대본이 있어도 만들지 않는다
+                    skip = {t["sid"] for t in (config.read_json(u.terms_dir / "terms.json", {}) or {}).get("terms") or []
+                            if t.get("skip")}
                 out += [p.stem for p in u.script_dir.glob("*.json")
-                        if not p.stem.startswith("_") and not p.stem.endswith(".edit")]
+                        if not p.stem.startswith("_") and not p.stem.endswith(".edit") and p.stem not in skip]
         return sorted(out, key=_id_key)
 
     def pick(self, only: Optional[List[str]] = None) -> List[str]:
