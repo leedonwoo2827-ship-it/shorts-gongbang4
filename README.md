@@ -30,7 +30,7 @@ run.bat          :: 제작 대시보드
 - 첫 프레임부터 후크(용어가 들어간 질문/반전) 표시, 1번 문장은 오답 유도·반전·결과 먼저.
 - 한 문장 = 한 장면(3~5초마다 화면 변화), 흐름은 오해 → 정답 → 이유 → 시험 포인트 → **퀴즈 질문**(정답은 고정 댓글).
 - 제목 맨 앞에 용어 이름(검색 노출). 프롬프트: `aside_shorts/prompts/term_script.md`, 유튜브 문구 규칙: `ytmeta.py` 의 `TERM_RULES`.
-- 목소리: 기본 **F1 · 속도 1.05 · 품질(steps) 16**(원래 F4 · 1.1 · 8 — 초당 6.1음절로 급해 가볍게 들림). 후보는 F1·F2·M1. `jobs/_voices/index.html` 에서 10종·속도·품질 비교를 들어 보고 `aside.config.json` 의 `tts` 에서 바꾼다.
+- 목소리: 기본 **M1 · 속도 1.05 · 품질(steps) 16**(원래 F4 · 1.1 · 8 — 초당 6.1음절로 급해 가볍게 들림). 후보는 F1·F2·M1. `jobs/_voices/index.html` 에서 10종·속도·품질 비교를 들어 보고 `aside.config.json` 의 `tts` 에서 바꾼다.
 - 발음: SQL 키워드는 영어 소리(SELECT→셀렉트), 약어는 글자(DDL→디디엘) — `aside_shorts/supertonic/pronunciation_map.yaml`.
 
 ## 고친 것

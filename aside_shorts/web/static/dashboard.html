@@ -258,7 +258,7 @@ async function loadState() {
     : `<option value="">작업 없음 — 「새 작업·원고」 탭</option>`;
   const so = st.styles.map(x => `<option value="${esc(x.name)}">${esc(x.label)}</option>`).join("");
   const vo = st.voices.map(x => `<option>${x}</option>`).join("");
-  $("#nj-style").innerHTML = so; $("#nj-voice").innerHTML = vo; $("#nj-voice").value = "F4";
+  $("#nj-style").innerHTML = so; $("#nj-voice").innerHTML = vo; $("#nj-voice").value = st.default_voice || "M1";
   $("#g-style").innerHTML = `<option value="">(전체 설정 따름)</option>` + so; $("#g-voice").innerHTML = `<option value="">(전체 설정 따름)</option>` + vo;
 }
 async function checkTools() {

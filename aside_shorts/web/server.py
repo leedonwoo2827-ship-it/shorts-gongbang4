@@ -158,7 +158,7 @@ def state() -> Dict[str, Any]:
         "native": bool(config.load()["youtube"].get("native_schedule")),
         "busy": RUN.busy, "cmd": RUN.cmd, "app": "aside-shorts",
         "styles": [{"name": n, "label": styles.load(n).get("label", n)} for n in styles.names()],
-        "voices": tts.VOICES,
+        "voices": tts.VOICES, "default_voice": config.load()["tts"]["voice"],
     }
 
 
