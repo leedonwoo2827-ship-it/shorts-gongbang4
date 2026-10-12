@@ -186,6 +186,10 @@ def run_terms(job: Job, only=None, force: bool = False) -> None:
                       **sh, "perspective": t["name"], "term": {"name": t["name"], "sources": t["sources"]}}
                 for ln in sh.get("lines") or []:
                     ln["keywords"] = [k for k in ln.get("keywords") or [] if k and k in ln.get("text", "")]
+                last = (sh.get("lines") or [{}])[-1]
+                if last and "설명란" not in last.get("say", "") + last.get("text", ""):     # 끝 멘트가 빠지면 붙인다
+                    last["say"] = last.get("say", "").rstrip(" .?!") + "? 정답은 설명란에"
+                    last["text"] = last.get("text", "").rstrip() + " 정답은 설명란에!"
                 for i, im in enumerate(sh.get("images") or [], 1):
                     im["key"] = im.get("key") or f"img{i}"
                 if not (t.get("mermaid") or "").strip():      # 도식 재료가 없으면 chart 는 일반 도해로
