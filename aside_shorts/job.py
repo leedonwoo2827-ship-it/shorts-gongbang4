@@ -60,7 +60,12 @@ class Job:
         return units_in(self.dir)
 
     def unit(self, prefix: str) -> Optional[Unit]:
-        return next((u for u in self.units if u.prefix == prefix), None)
+        # 쇼츠마다 단원 폴더를 다시 훑으면 300편 목록에 수십 초 — 한 번 읽어 두고, 못 찾을 때만 다시 훑는다
+        cache = self.__dict__.setdefault("_unit_cache", {})
+        if prefix not in cache:
+            cache.clear()
+            cache.update({u.prefix: u for u in self.units})
+        return cache.get(prefix)
 
     def unit_of(self, sid: str) -> Unit:
         u = self.unit(sid.rsplit("-", 1)[0])

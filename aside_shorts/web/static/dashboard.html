@@ -288,6 +288,8 @@ async function pollLog() {
       $("#loginLink").href = m[1]; $("#loginBar").classList.remove("hide"); return false; });
     const el = $("#log"); const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
     el.textContent += r.lines.join("\n") + "\n"; if (atBottom) el.scrollTop = el.scrollHeight;
+    // 한 편이 완성되면 진행표만 바로 갱신 (결과 보기에서 고치는 중이면 건드리지 않음)
+    if (r.busy && S.tab === "dash" && r.lines.some(l => /✓ \S+ 완성/.test(l))) viewDash();
   }
   const st = $("#logst");
   st.textContent = r.busy ? `⏳ ${r.label} 하는 중…` : r.code == null ? "대기 중" : r.code === 0 ? "✓ 다 됐어요" : r.code === -1 ? "■ 멈춤" : "✗ 중간에 멈췄어요";
@@ -363,7 +365,8 @@ async function viewDash() {
   const upd = () => { $("#bSelMake").disabled = !SEL.size; $("#selAll").checked = SEL.size && SEL.size === ids.length;
     $("#selInfo").textContent = SEL.size ? `${SEL.size}편 선택: ${[...SEL].join(", ")}` : "체크한 쇼츠만 한 번에 돌릴 수 있어요" };
   document.querySelectorAll(".sel").forEach(c => c.onchange = () => { c.checked ? SEL.add(c.value) : SEL.delete(c.value); upd() });
-  $("#selAll").onchange = e => { ids.forEach(x => e.target.checked ? SEL.add(x) : SEL.delete(x)); viewDash() };
+  $("#selAll").onchange = e => { ids.forEach(x => e.target.checked ? SEL.add(x) : SEL.delete(x));
+    document.querySelectorAll(".sel").forEach(c => c.checked = e.target.checked); upd() };
   $("#bSelMake").onclick = () => run(["make", "--job", S.job, "--only", [...SEL].join(","), ...($("#o-force").checked ? ["--force"] : [])],
     `${SEL.size}편(${[...SEL].join(", ")})을 목소리→영상까지 만듭니다 (한 편에 10분 안팎). 진행할까요?`);
   upd();
